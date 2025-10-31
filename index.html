@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>亲密关系测试 - 产品原型</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .prototype-nav {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .prototype-nav h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .prototype-nav a {
+            display: block;
+            padding: 5px 10px;
+            margin: 5px 0;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+
+        .prototype-nav a:hover {
+            background: #f0f0f0;
+        }
+
+        .page {
+            display: none;
+            max-width: 414px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* 首页样式 */
+        .home-page {
+            padding: 60px 30px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #6366f1;
+            margin-bottom: 20px;
+        }
+
+        .home-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1f2937;
+        }
+
+        .home-subtitle {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 40px;
+            line-height: 1.8;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            padding: 10px 20px;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* 说明页样式 */
+        .info-page {
+            padding: 40px 30px;
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #1f2937;
+        }
+
+        .info-item {
+            margin-bottom: 25px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .info-item::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .info-item h4 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        .info-item p {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            margin: 30px 0;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .checkbox-group input {
+            margin-right: 10px;
+            margin-top: 2px;
+        }
+
+        .checkbox-group label {
+            font-size: 14px;
+            color: #374151;
+        }
+
+        /* 测评页样式 */
+        .test-page {
+            padding: 20px 30px 40px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+
+        .question-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 30px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .likert-scale {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .scale-label {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .scale-options {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .scale-option {
+            flex: 1;
+            padding: 12px 8px;
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #374151;
+            transition: all 0.2s;
+        }
+
+        .scale-option:hover {
+            background: #f3f4f6;
+            border-color: #667eea;
+        }
+
+        .scale-option.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-outline {
+            flex: 1;
+            padding: 14px;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            color: #374151;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            flex: 1;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* 加载页样式 */
+        .loading-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 16px;
+            color: #6b7280;
+        }
+
+        /* 结果页样式 */
+        .result-page {
+            padding: 30px;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+            color: white;
+            border-radius: 20px;
+            font-size: 18px;
+        }
+
+        .result-badge.safe {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .result-badge.avoidant {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+
+        .result-subtitle {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .result-chart {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 12px;
+        }
+
+        .chart-bar {
+            margin-bottom: 20px;
+        }
+
+        .chart-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .chart-fill {
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .chart-value {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.5s;
+        }
+
+        .chart-value.anxious {
+            background: linear-gradient(90deg, #f59e0b 0%, #ef4444 100%);
+        }
+
+        .chart-value.avoidant {
+            background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+        }
+
+        .chart-value.safe {
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+        }
+
+        .result-section {
+            margin: 30px 0;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: "";
+            width: 4px;
+            height: 18px;
+            background: #667eea;
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        .feature-list, .suggestion-list {
+            list-style: none;
+        }
+
+        .feature-list li, .suggestion-list li {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: #f9fafb;
+            border-left: 3px solid #667eea;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        .action-buttons {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-action {
+            padding: 14px;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .btn-action.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-action.secondary {
+            background: white;
+            border: 2px solid #e5e7eb;
+            color: #374151;
+        }
+
+        /* 分享页样式 */
+        .share-page {
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .share-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 40px 30px;
+            color: white;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        }
+
+        .share-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .share-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .qr-code-placeholder {
+            width: 150px;
+            height: 150px;
+            background: white;
+            border-radius: 12px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航菜单 -->
+    <div class="prototype-nav">
+        <h3>原型导航</h3>
+        <a href="#" onclick="showPage('home'); return false;">1. 首页</a>
+        <a href="#" onclick="showPage('info'); return false;">2. 说明页</a>
+        <a href="#" onclick="showPage('test'); return false;">3. 测评页</a>
+        <a href="#" onclick="showPage('loading'); return false;">4. 加载页</a>
+        <a href="#" onclick="showPage('result'); return false;">5. 结果页</a>
+        <a href="#" onclick="showPage('share'); return false;">6. 分享页</a>
+    </div>
+
+    <!-- 1. 首页 -->
+    <div id="home" class="page active">
+        <div class="home-page">
+            <div class="logo">💑</div>
+            <h1 class="home-title">了解你的亲密关系模式</h1>
+            <p class="home-subtitle">
+                基于依恋类型理论<br>
+                探索你的情感依赖模式<br>
+                发现焦虑型、安全型或回避型的自己
+            </p>
+            <a href="#" class="btn-primary" onclick="showPage('info'); return false;">开始测试</a>
+            <div>
+                <a href="#" class="btn-secondary">了解测评依据</a>
+                <span style="margin: 0 10px;">|</span>
+                <a href="#" class="btn-secondary">隐私声明</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. 说明页 -->
+    <div id="info" class="page">
+        <div class="info-page">
+            <h2 class="page-title">测评说明</h2>
+            <div class="info-item">
+                <h4>测评时间</h4>
+                <p>约5分钟完成，共15题</p>
+            </div>
+            <div class="info-item">
+                <h4>测评方式</h4>
+                <p>根据你的真实感受选择"完全不同意"到"完全同意"，没有标准答案</p>
+            </div>
+            <div class="info-item">
+                <h4>结果说明</h4>
+                <p>系统会根据你的回答，判断你在亲密关系中的依赖类型：焦虑型、安全型或回避型</p>
+            </div>
+            <div class="info-item">
+                <h4>隐私保护</h4>
+                <p>你的数据仅用于生成测试结果，我们不会收集个人信息用于其他用途</p>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="agree">
+                <label for="agree">我已阅读并同意隐私声明</label>
+            </div>
+            <a href="#" class="btn-primary" onclick="startTest(); return false;">开始测评</a>
+        </div>
+    </div>
+
+    <!-- 3. 测评页 -->
+    <div id="test" class="page">
+        <div class="test-page">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">1 / 15</div>
+            
+            <div class="question-card">
+                <div class="question-text" id="questionText">
+                    加载题目中...
+                </div>
+                
+                <div class="likert-scale">
+                    <span class="scale-label">完全不同意</span>
+                    <span class="scale-label">完全同意</span>
+                </div>
+                
+                <div class="scale-options" id="scaleOptions">
+                    <div class="scale-option" data-value="1">1</div>
+                    <div class="scale-option" data-value="2">2</div>
+                    <div class="scale-option" data-value="3">3</div>
+                    <div class="scale-option" data-value="4">4</div>
+                    <div class="scale-option" data-value="5">5</div>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="btn-outline" id="prevBtn" onclick="goToPrevQuestion()">上一题</button>
+                <button class="btn-submit" id="nextBtn" onclick="goToNextQuestion()">下一题</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. 加载页 -->
+    <div id="loading" class="page">
+        <div class="loading-page">
+            <div class="spinner"></div>
+            <p class="loading-text">正在分析你的回答...</p>
+        </div>
+    </div>
+
+    <!-- 5. 结果页 - 动态生成 -->
+    <div id="result" class="page">
+        <div class="result-page">
+            <div class="result-header">
+                <div class="result-badge" id="resultBadge">分析中...</div>
+                <p class="result-subtitle">你的主导亲密关系模式</p>
+            </div>
+            
+            <div class="result-chart" id="resultChart">
+                <!-- 动态生成图表 -->
+            </div>
+            
+            <div class="result-section">
+                <h3 class="section-title">你的特点</h3>
+                <ul class="feature-list" id="featureList">
+                    <!-- 动态生成特点 -->
+                </ul>
+            </div>
+            
+            <div class="result-section">
+                <h3 class="section-title">给你的建议</h3>
+                <ul class="suggestion-list" id="suggestionList">
+                    <!-- 动态生成建议 -->
+                </ul>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="#" class="btn-action primary" onclick="resetTest(); return false;">重新测试</a>
+                <a href="#" class="btn-action secondary" onclick="shareResult(); return false;">分享结果</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. 分享页 -->
+    <div id="share" class="page">
+        <div class="share-page">
+            <h2 class="page-title" style="text-align: left; margin-bottom: 30px;">分享你的结果</h2>
+            
+            <div class="share-card" id="shareCard">
+                <div class="share-title" id="shareTitle">我是「分析中...」</div>
+                <div class="share-subtitle" id="shareSubtitle">正在加载...</div>
+                <div class="qr-code-placeholder">
+                    [二维码区域]<br>
+                    扫码测一测
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="#" class="btn-action secondary" onclick="copyLink(); return false;">复制链接</a>
+                <a href="#" class="btn-action secondary" onclick="showPage('result'); return false;">返回结果</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== 题库数据 ====================
+        const questions = [
+            // 焦虑维度 (A1-A5)
+            { id: 1, text: "当伴侣没有及时回复我的消息时，我会变得焦虑。", dimension: 'anxious', reverse: false },
+            { id: 2, text: "我经常担心我们的关系会突然结束。", dimension: 'anxious', reverse: false },
+            { id: 3, text: "我需要频繁确认伴侣是否在乎我。", dimension: 'anxious', reverse: false },
+            { id: 4, text: "当我们发生争执后，我很难平静下来。", dimension: 'anxious', reverse: false },
+            { id: 5, text: "当伴侣想要独处时，我会感到被拒绝。", dimension: 'anxious', reverse: false },
+            
+            // 回避维度 (V1-V5)
+            { id: 6, text: "我更习惯自己处理问题，不太愿意求助伴侣。", dimension: 'avoidant', reverse: false },
+            { id: 7, text: "亲密的关系让我感到脆弱，我倾向于保持距离。", dimension: 'avoidant', reverse: false },
+            { id: 8, text: "我不太喜欢谈论自己的情绪或内心需求。", dimension: 'avoidant', reverse: false },
+            { id: 9, text: "当伴侣需要我的支持和安慰时，我常想先保持距离。", dimension: 'avoidant', reverse: false },
+            { id: 10, text: "承诺和长期关系让我有被束缚的感觉。", dimension: 'avoidant', reverse: false },
+            
+            // 安全维度 (S1-S5) - 正向题
+            { id: 11, text: "我能够坦然表达自己的需求和界限。", dimension: 'safe', reverse: false },
+            { id: 12, text: "亲密关系让我更有力量，而不是失去自我。", dimension: 'safe', reverse: false },
+            { id: 13, text: "当发生冲突时，我能关注问题本身，而不是人身攻击。", dimension: 'safe', reverse: false },
+            { id: 14, text: "当伴侣没有立即回应时，我能耐心等待，不会过度猜测。", dimension: 'safe', reverse: false },
+            { id: 15, text: "我能在亲密与独立之间保持很好的平衡。", dimension: 'safe', reverse: false }
+        ];
+
+        // 结果内容配置
+        const resultConfig = {
+            anxious: {
+                name: "焦虑型",
+                badgeClass: "",
+                description: "更在意关系的稳定与回应",
+                features: [
+                    "高度在意关系的稳定性，对分离和失去敏感",
+                    "对伴侣的响应延迟会感到焦虑，需要频繁确认",
+                    "情绪起伏较大，冲突后会难以平静",
+                    "希望与伴侣保持高度连接，不太适应独处需求"
+                ],
+                suggestions: [
+                    "练习情绪自我调节，学习深呼吸和正念技巧",
+                    "与伴侣建立\"回应契约\"，明确沟通的时间窗口",
+                    "记录触发情境，逐步改变对\"延迟回应\"的解读",
+                    "培养自我安抚能力，减少对伴侣的过度依赖"
+                ]
+            },
+            safe: {
+                name: "安全型",
+                badgeClass: "safe",
+                description: "能在亲密与独立间保持平衡",
+                features: [
+                    "能够坦然表达自己的需求和界限",
+                    "在亲密关系中保持独立与依赖的平衡",
+                    "冲突时能关注问题本身，而非人身攻击",
+                    "能够给予伴侣支持和理解"
+                ],
+                suggestions: [
+                    "继续保持有效的沟通习惯和情感表达能力",
+                    "帮助伴侣理解和支持，传递安全感的信号",
+                    "在压力期主动设定连接时刻，维护关系质量",
+                    "定期自我反思，维持对关系动态的敏感度"
+                ]
+            },
+            avoidant: {
+                name: "回避型",
+                badgeClass: "avoidant",
+                description: "更倾向于保持独立和距离",
+                features: [
+                    "强调自主和独立，习惯自己处理问题",
+                    "对亲密和依赖感到不适，倾向于保持距离",
+                    "不太愿意表达内心需求和情绪",
+                    "在关系感到束缚时会选择疏离"
+                ],
+                suggestions: [
+                    "尝试设置\"安全表达时段\"，逐步练习分享感受",
+                    "学习从描述需求开始，而非直接给出结论",
+                    "进行小步依赖练习，从小的请求开始建立信任",
+                    "在冲突后给出\"复联承诺\"，避免长期冷战"
+                ]
+            }
+        };
+
+        // ==================== 全局状态 ====================
+        let currentQuestionIndex = 0;
+        let answers = {}; // { questionId: answer }
+
+        // ==================== 页面切换 ====================
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // ==================== 开始测试 ====================
+        function startTest() {
+            const agreeCheckbox = document.getElementById('agree');
+            if (!agreeCheckbox.checked) {
+                alert('请先阅读并同意隐私声明');
+                return;
+            }
+
+            // 重置状态
+            currentQuestionIndex = 0;
+            answers = {};
+            localStorage.removeItem('testAnswers');
+            localStorage.removeItem('testResult');
+
+            // 加载第一题
+            loadQuestion(0);
+            showPage('test');
+        }
+
+        // ==================== 加载题目 ====================
+        function loadQuestion(index) {
+            if (index < 0 || index >= questions.length) return;
+
+            currentQuestionIndex = index;
+            const question = questions[index];
+            
+            // 更新进度
+            const progress = ((index + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${index + 1} / ${questions.length}`;
+
+            // 更新题目文本
+            document.getElementById('questionText').textContent = question.text;
+
+            // 更新选项状态
+            const scaleOptions = document.querySelectorAll('.scale-option');
+            const savedAnswer = answers[question.id];
+            
+            scaleOptions.forEach((option, i) => {
+                option.classList.remove('selected');
+                if (savedAnswer === (i + 1)) {
+                    option.classList.add('selected');
+                }
+            });
+
+            // 更新按钮状态
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.style.display = index === 0 ? 'none' : 'block';
+            nextBtn.textContent = index === questions.length - 1 ? '提交' : '下一题';
+        }
+
+        // ==================== 选项点击 ====================
+        document.querySelectorAll('.scale-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const value = parseInt(this.getAttribute('data-value'));
+                const question = questions[currentQuestionIndex];
+                
+                // 保存答案
+                answers[question.id] = value;
+                localStorage.setItem('testAnswers', JSON.stringify(answers));
+
+                // 更新UI
+                this.parentElement.querySelectorAll('.scale-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+
+        // ==================== 题目导航 ====================
+        function goToPrevQuestion() {
+            if (currentQuestionIndex > 0) {
+                loadQuestion(currentQuestionIndex - 1);
+            }
+        }
+
+        function goToNextQuestion() {
+            const question = questions[currentQuestionIndex];
+            
+            // 检查是否已回答
+            if (!answers[question.id]) {
+                alert('请先选择你的答案');
+                return;
+            }
+
+            // 如果是最后一题，提交
+            if (currentQuestionIndex === questions.length - 1) {
+                submitTest();
+            } else {
+                loadQuestion(currentQuestionIndex + 1);
+            }
+        }
+
+        // ==================== 提交测试 ====================
+        function submitTest() {
+            // 检查是否所有题目都已回答
+            const unanswered = questions.filter(q => !answers[q.id]);
+            if (unanswered.length > 0) {
+                alert(`还有 ${unanswered.length} 道题未回答，请完成所有题目`);
+                return;
+            }
+
+            // 保存答案
+            localStorage.setItem('testAnswers', JSON.stringify(answers));
+
+            // 显示加载页
+            showPage('loading');
+
+            // 延迟计算，增加真实感
+            setTimeout(() => {
+                const result = calculateResult();
+                localStorage.setItem('testResult', JSON.stringify(result));
+                displayResult(result);
+            }, 2000);
+        }
+
+        // ==================== 计算结果 ====================
+        function calculateResult() {
+            let anxiousScore = 0;
+            let avoidantScore = 0;
+            let safeScore = 0;
+
+            // 计算各维度得分
+            questions.forEach(q => {
+                const answer = answers[q.id];
+                if (!answer) return;
+
+                if (q.dimension === 'anxious') {
+                    anxiousScore += answer;
+                } else if (q.dimension === 'avoidant') {
+                    avoidantScore += answer;
+                } else if (q.dimension === 'safe') {
+                    safeScore += answer;
+                }
+            });
+
+            // 标准化到0-100分
+            // 每个维度5题，每题1-5分，总分5-25分
+            const normalizeScore = (score) => {
+                return Math.round(((score - 5) / (25 - 5)) * 100);
+            };
+
+            const anxiousNormalized = normalizeScore(anxiousScore);
+            const avoidantNormalized = normalizeScore(avoidantScore);
+            const safeNormalized = normalizeScore(safeScore);
+
+            // 判定类型
+            // 如果安全型得分≥70且焦虑和回避都较低，则为安全型
+            // 否则取焦虑和回避中较高者
+            let type = 'anxious';
+            
+            if (safeNormalized >= 70 && anxiousNormalized < 50 && avoidantNormalized < 50) {
+                type = 'safe';
+            } else if (avoidantNormalized > anxiousNormalized) {
+                type = 'avoidant';
+            } else {
+                type = 'anxious';
+            }
+
+            return {
+                type: type,
+                scores: {
+                    anxious: anxiousNormalized,
+                    avoidant: avoidantNormalized,
+                    safe: safeNormalized
+                },
+                rawScores: {
+                    anxious: anxiousScore,
+                    avoidant: avoidantScore,
+                    safe: safeScore
+                }
+            };
+        }
+
+        // ==================== 显示结果 ====================
+        function displayResult(result) {
+            const config = resultConfig[result.type];
+            
+            // 更新徽章
+            const badge = document.getElementById('resultBadge');
+            badge.textContent = config.name;
+            badge.className = 'result-badge ' + config.badgeClass;
+
+            // 更新图表
+            const chartHtml = `
+                <div class="chart-bar">
+                    <div class="chart-label">
+                        <span>焦虑维度</span>
+                        <span>${result.scores.anxious}分</span>
+                    </div>
+                    <div class="chart-fill">
+                        <div class="chart-value anxious" style="width: ${result.scores.anxious}%;"></div>
+                    </div>
+                </div>
+                <div class="chart-bar">
+                    <div class="chart-label">
+                        <span>回避维度</span>
+                        <span>${result.scores.avoidant}分</span>
+                    </div>
+                    <div class="chart-fill">
+                        <div class="chart-value avoidant" style="width: ${result.scores.avoidant}%;"></div>
+                    </div>
+                </div>
+                <div class="chart-bar">
+                    <div class="chart-label">
+                        <span>安全维度</span>
+                        <span>${result.scores.safe}分</span>
+                    </div>
+                    <div class="chart-fill">
+                        <div class="chart-value safe" style="width: ${result.scores.safe}%;"></div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('resultChart').innerHTML = chartHtml;
+
+            // 更新特点
+            const featureList = document.getElementById('featureList');
+            featureList.innerHTML = config.features.map(f => `<li>${f}</li>`).join('');
+
+            // 更新建议
+            const suggestionList = document.getElementById('suggestionList');
+            suggestionList.innerHTML = config.suggestions.map(s => `<li>${s}</li>`).join('');
+
+            // 显示结果页
+            showPage('result');
+        }
+
+        // ==================== 分享结果 ====================
+        function shareResult() {
+            const resultData = localStorage.getItem('testResult');
+            if (!resultData) {
+                alert('没有可分享的结果');
+                return;
+            }
+
+            const result = JSON.parse(resultData);
+            const config = resultConfig[result.type];
+
+            // 更新分享页内容
+            document.getElementById('shareTitle').textContent = `我是「${config.name}」`;
+            document.getElementById('shareSubtitle').textContent = config.description;
+
+            showPage('share');
+        }
+
+        // ==================== 复制链接 ====================
+        function copyLink() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                alert('链接已复制到剪贴板');
+            }).catch(() => {
+                // 降级方案
+                const textarea = document.createElement('textarea');
+                textarea.value = url;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('链接已复制到剪贴板');
+            });
+        }
+
+        // ==================== 重置测试 ====================
+        function resetTest() {
+            if (confirm('确定要重新开始测试吗？当前结果将被清除。')) {
+                // 清除所有数据
+                answers = {};
+                currentQuestionIndex = 0;
+                localStorage.removeItem('testAnswers');
+                localStorage.removeItem('testResult');
+                
+                // 重置复选框
+                const agreeCheckbox = document.getElementById('agree');
+                if (agreeCheckbox) {
+                    agreeCheckbox.checked = false;
+                }
+                
+                // 返回首页
+                showPage('home');
+            }
+        }
+
+        // ==================== 恢复测试进度 ====================
+        function restoreTestProgress() {
+            const savedAnswers = localStorage.getItem('testAnswers');
+            if (savedAnswers) {
+                answers = JSON.parse(savedAnswers);
+                
+                // 检查是否完成
+                const allAnswered = questions.every(q => answers[q.id]);
+                if (allAnswered) {
+                    // 如果有保存的结果，直接显示
+                    const savedResult = localStorage.getItem('testResult');
+                    if (savedResult) {
+                        const result = JSON.parse(savedResult);
+                        displayResult(result);
+                        return;
+                    }
+                } else {
+                    // 找到第一个未回答的题目
+                    const firstUnansweredIndex = questions.findIndex(q => !answers[q.id]);
+                    if (firstUnansweredIndex >= 0) {
+                        loadQuestion(firstUnansweredIndex);
+                        showPage('test');
+                        return;
+                    }
+                }
+            }
+        }
+
+        // ==================== 初始化 ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // 尝试恢复测试进度
+            restoreTestProgress();
+
+            // 为导航链接更新
+            document.querySelectorAll('.prototype-nav a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const onclick = this.getAttribute('onclick');
+                    if (onclick) {
+                        eval(onclick);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

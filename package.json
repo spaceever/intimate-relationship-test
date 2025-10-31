@@ -1,0 +1,16 @@
+{
+  "name": "intimate-relationship-test",
+  "version": "1.0.0",
+  "description": "亲密关系测试 - 基于依恋类型理论的测试工具",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "亲密关系",
+    "依恋类型",
+    "心理测试"
+  ],
+  "author": "",
+  "license": "MIT"
+}
+
